@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "browserify src/main.js -t babelify -o dist/main.js",
-    "release": "NODE_ENV=production browserify -t babelify -t envify src/main.js | uglifyjs -c -o dist/main.js",
+    "release": "NODE_ENV=production browserify -t babelify -t envify src/main.jsx | uglifyjs -c -o dist/main.js",
     "watch": "npm-watch"
   },
   "watch": {
