@@ -60,16 +60,16 @@ const mapDispatchToProps = dispacth => ({
                                         value: event.target.value})
 });
 
-const Field = ({params: [label, value, field, errors, callback]}) => (
+const Field = ({params: [label, value, callback, errors]}) => (
     <div>
       {label}:
       <br/>
-      <input onChange={callback(field)}
+      <input onChange={callback}
              value={value}
-             style={R.has(field, errors) ? {color: 'red'} : {}}
+             style={errors.length > 0 ? {color: 'red'} : {}}
              />
       <span style={{color: 'red'}}>
-        {(errors[field] || []).join(',')}
+        {errors.join(',')}
       </span>
     </div>
 );
@@ -82,9 +82,14 @@ class FormClass extends React.Component {
               <fieldset>
                 <legend>Personal information:</legend>
 
-                <Field params={['First name', first, 'first', errors, update]} />
-                <Field params={['Last name', last, 'last', errors, update]} />
-                <Field params={['Age', age, 'age', errors, update]} />
+                <Field params={[
+                    'First name', first, update('first'), errors.first || []]} />
+
+                <Field params={[
+                    'Last name', last, update('last'), errors.last || []]} />
+
+                <Field params={[
+                    'Age', age, update('age'), errors.age || []]} />
 
                 Hello, {`${first} ${last} (${age})`}
               </fieldset>

@@ -1,17 +1,11 @@
 {
   "scripts": {
-    "build": "browserify src/main.js -o dist/main.js",
+    "build": "browserify src/main.js -t babelify -o dist/main.js",
+    "release": "NODE_ENV=production browserify -t babelify -t envify src/main.js | uglifyjs -c -o dist/main.js",
     "watch": "npm-watch"
   },
   "watch": {
     "build": "src/*.{js,jsx}"
-  },
-  "browserify": {
-    "transform": [
-      "babelify",
-      ["envify", {"global": true}],
-      ["uglifyify", {"sourcemap": false, "global": true}]
-    ]
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
@@ -26,7 +20,7 @@
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
-    "uglifyify": "^3.0.2",
+    "uglify-js": "^2.7.0",
     "validate.js": "^0.10.0"
   }
 }
