@@ -66,14 +66,7 @@ const mapStateToProps = ({ first, last, age }) => ({
 const mapDispatchToProps = dispacth => ({
     update: field => event => dispacth({type: 'UPDATE', field,
                                         value: event.target.value}),
-    submitForm: (e, errors) => {
-        e.preventDefault();
-        if (Object.keys(errors).length === 0) {
-            dispacth({type: 'SUBMIT'});
-        } else {
-            alert("Please fix errors!");
-        }
-    }
+    submit: () => dispacth({type: 'SUBMIT'})
 });
 
 const Field = ({params: [label, value, callback, errors]}) => (
@@ -92,7 +85,7 @@ const Field = ({params: [label, value, callback, errors]}) => (
 
 class FormClass extends React.Component {
     render () {
-        const { first, last, age, errors, update, submitForm } = this.props;
+        const { first, last, age, errors, update, submit } = this.props;
         return (
             <form>
               <fieldset>
@@ -109,7 +102,7 @@ class FormClass extends React.Component {
 
                 Hello, {`${first} ${last} (${age})`}
               </fieldset>
-              <input type="submit" value="Submit" onClick={(e) => submitForm(e, errors)} />
+              <input type="submit" value="Submit" disabled={Object.keys(errors).length} onClick={(e) => {e.preventDefault(); submit()}} />
             </form>
         );
     }
