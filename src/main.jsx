@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider, connect } from 'react-redux';
 import R from 'ramda';
 import validate from 'validate.js';
+import 'isomorphic-fetch'
 
 // validation
 
@@ -42,6 +43,13 @@ const reducer = (state, action) => {
     case 'UPDATE': {
         return R.assoc(action.field, action.value, state);
     }
+    case 'SUBMIT': {
+        fetch("http:/127.0.0.1:5000/submit-data", {
+          method: "POST",
+          body: JSON.stringify(state)
+        });
+        return state;
+    }
     default: { return state; }
     }
 };
@@ -57,7 +65,15 @@ const mapStateToProps = ({ first, last, age }) => ({
 
 const mapDispatchToProps = dispacth => ({
     update: field => event => dispacth({type: 'UPDATE', field,
-                                        value: event.target.value})
+                                        value: event.target.value}),
+    submitForm: (e, errors) => {
+        e.preventDefault();
+        if (Object.keys(errors).length === 0) {
+            dispacth({type: 'SUBMIT'});
+        } else {
+            alert("Please fix errors!");
+        }
+    }
 });
 
 const Field = ({params: [label, value, callback, errors]}) => (
@@ -76,7 +92,7 @@ const Field = ({params: [label, value, callback, errors]}) => (
 
 class FormClass extends React.Component {
     render () {
-        const { first, last, age, errors, update } = this.props;
+        const { first, last, age, errors, update, submitForm } = this.props;
         return (
             <form>
               <fieldset>
@@ -93,6 +109,7 @@ class FormClass extends React.Component {
 
                 Hello, {`${first} ${last} (${age})`}
               </fieldset>
+              <input type="submit" value="Submit" onClick={(e) => submitForm(e, errors)} />
             </form>
         );
     }
